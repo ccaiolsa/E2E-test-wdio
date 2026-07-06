@@ -1,2 +1,5 @@
-/hub-de-leitura-integrado
+/test
 /node_modules
+package-lock.json
+package.json
+wdio.conf.js
