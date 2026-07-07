@@ -50,8 +50,11 @@ export const config = {
     // https://saucelabs.com/platform/platform-configurator
     //
     capabilities: [{
-        browserName: 'chrome'
-    }],
+    browserName: 'chrome',
+    'goog:chromeOptions': {
+        args: ['--headless', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage']
+    }
+}],
 
     //
     // ===================
@@ -100,8 +103,20 @@ export const config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    // services: [],
-    //
+    services: ['docker'],
+    dockerOptions: {
+        image: 'node:14',
+        healthCheck: {
+            url: 'http://localhost:3000',
+            maxRetries: 3,
+            inspectInterval: 1000,
+            startDelay: 2000
+        },
+        options: {
+            p: ['3000:3000'],
+            shmSize: '2g'
+        }
+    },
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
     // see also: https://webdriver.io/docs/frameworks
