@@ -23,3 +23,7 @@ branch docker => branch onde se localiza os arquivos Docker, teste e plataforma
         args: ['--headless', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage']
     }
 }]
+- build da image: 
+    docker build -t ebac-wdio .
+- execução da imagem e definição do diretório onde os relatórios estarão armazenados:
+    docker run --rm --name ebac-wdio ebac-wdio

@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile-app          # Dockerfile específico para a aplicação
+    working_dir: /app/hub-de-leitura-integrado
+    command: npm run start
+    ports:
+      - "3000:3000"
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile-tests        # Dockerfile específico para testes (separado)
+    depends_on:
+      - app
+    command: npm run ci:test

@@ -1,5 +1,6 @@
-FROM node:14
-# Atualiza o sistema e instala dependências necessárias para o Chrome
+FROM node:20-bookworm
+
+# Instala Google Chrome e dependências de sistema
 RUN apt-get update && apt-get install -y \
     wget \
     gnupg \
@@ -13,22 +14,32 @@ RUN apt-get update && apt-get install -y \
     libxss1 \
     lsb-release \
     xdg-utils \
-    && wget -q -O - https://google.com | gpg --dearmor -o /usr/share/keyrings/google-chrome-keyring.gpg \
-    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome-keyring.gpg] http://google.com stable main" > /etc/apt/sources.list.d/google-chrome.list \
+    && wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome-keyring.gpg \
+    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
     && apt-get update && apt-get install -y google-chrome-stable \
     && rm -rf /var/lib/apt/lists/*
-# Instalação do webdriverio globalmente
-RUN npm install -g webdriverio
-# Definição do diretório de trabalho
+
+# Diretório principal do projeto
 WORKDIR /app
-# Copiar arquivos relevantes e instalar dependências do projeto
+
+# Copia package.json e package-lock.json da raiz e instala dependências principais
 COPY package.json package-lock.json ./
 RUN npm install
-COPY . .
-# Definição do diretório de trabalho para a plataforma e instalação de suas dependências
-WORKDIR /app/hub-de-leitura-integrado/
-COPY ./hub-de-leitura-integrado/ package.json package-lock.json ./
+
+# Copia package.json e package-lock.json do serviço interno e instala as dependências dele
+WORKDIR /app/hub-de-leitura-integrado
+COPY hub-de-leitura-integrado/package*.json ./
 RUN npm install
+
+# Copia o código-fonte do serviço interno
+COPY hub-de-leitura-integrado/ . 
+
+# Volta ao diretório raiz e copia demais arquivos (exceto node_modules para não sobrescrever)
+WORKDIR /app
 COPY . .
-# Comando para rodar os testes de integração
-CMD ["npm","run", "ci:test"]
+
+# Garante que o bcrypt seja reconstruído com as dependências do ambiente
+RUN cd hub-de-leitura-integrado && npm rebuild bcrypt --build-from-source
+
+# Comando principal (ajuste conforme necessário)
+CMD ["npm", "run", "ci:test"]
