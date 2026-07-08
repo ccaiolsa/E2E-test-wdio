@@ -9,13 +9,18 @@ describe('Hub de Leitura Integrado', () => {
 
     it('Funcionalidade Checkout', async () => {
         page.adicionar_livro('O senhor dos anéis')
-        await expect(
-            pageCart.contador_carrinho
-        ).toHaveText('1')
+        await pageCart.contador_carrinho.waitUntil(async () => {
+            return (await pageCart.contador_carrinho.getText()) !== ''
+        }, { timeout: 5000, timeoutMsg: 'O contador do carrinho não foi atualizado' })
+        await expect(pageCart.contador_carrinho).toHaveText('1')
+
         pageCart.preencher_carrinho('Teste de descrição do produto')
         await expect(browser).toHaveUrl('http://localhost:3000/checkout.html')
-        await expect(
-            $('h2=Finalizar')
-        ).toBeDisplayed()
+        
+        await $('h2=Finalizar').waitForDisplayed({
+            timeout: 5000,
+            timeoutMsg: 'O botão de finalizar não foi exibido'
+        })
+        await expect($('h2=Finalizar')).toBeDisplayed()
     })
 })

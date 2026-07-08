@@ -8,7 +8,12 @@ describe('Hub de Leitura Integrado', () => {
 
     it('Funcionalidade Login', async () => {
         login.realizar_login('usuario@teste.com','user123')
+        await login.flash_msg.waitForDisplayed({
+            timeout: 5000,
+            timeoutMsg: 'A mensagem de login não foi exibida'
+        })
         await expect(login.flash_msg).toBeDisplayed()
+        
         await expect(browser).toHaveUrl('http://localhost:3000/dashboard.html')
     });
  

@@ -7,7 +7,7 @@ services:
     working_dir: /app/hub-de-leitura-integrado
     command: npm run start
     ports:
-      - "3000:3000"
+      http://app:3000
   tests:
     build:
       context: .

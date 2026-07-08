@@ -43,7 +43,7 @@ export const config = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
-    maxInstances: 10,
+    maxInstances: 1,
     //
     // If you have trouble getting all important capabilities together, check out the
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -51,8 +51,14 @@ export const config = {
     //
     capabilities: [{
     browserName: 'chrome',
+    maxInstances: 1,
     'goog:chromeOptions': {
-        args: ['--headless', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage']
+        binary: process.env.CHROME_BIN,
+        args: ['--headless', 
+            '--disable-gpu',
+            '--disable-infobars',
+            '--no-sandbox', 
+            '--disable-dev-shm-usage']
     }
 }],
 
@@ -87,7 +93,7 @@ export const config = {
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
-    // baseUrl: 'http://localhost:8080',
+    baseUrl: 'http://localhost:3000',
     //
     // Default timeout for all waitFor* commands.
     waitforTimeout: 10000,
@@ -103,20 +109,7 @@ export const config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ['docker'],
-    dockerOptions: {
-        image: 'node:14',
-        healthCheck: {
-            url: 'http://localhost:3000',
-            maxRetries: 3,
-            inspectInterval: 1000,
-            startDelay: 2000
-        },
-        options: {
-            p: ['3000:3000'],
-            shmSize: '2g'
-        }
-    },
+    services: [],
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
     // see also: https://webdriver.io/docs/frameworks
@@ -246,11 +239,6 @@ export const config = {
      * @param {boolean} result.passed    true if test has passed, otherwise false
      * @param {object}  result.retries   information about spec related retries, e.g. `{ attempts: 0, limit: 0 }`
      */
-    afterTest: async function(test, context, { error, result, duration, passed, retries }) {
-    if (error) {
-        await browser.takeScreenshot();
-    }
-},
     // afterTest: function(test, context, { error, result, duration, passed, retries }) {
     // },
 
