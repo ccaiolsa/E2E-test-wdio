@@ -26,3 +26,23 @@ branch docker => branch onde se localiza os arquivos Docker, teste e plataforma
     docker build -t ebac-wdio .
 - execução da imagem e definição do diretório onde os relatórios estarão armazenados:
     docker run --rm --name ebac-wdio -v "${PWD}/allure-report:/app/allure-report" ebac-wdio
+
+## Executando testes
+
+No package.json estão os seguintes scripts.
+
+```
+    // package.json
+    "wdio": "wdio run ./wdio.conf.js",
+    "report-generate": "allure generate ./allure-results --clean -o ./allure-report",
+    "report-open":"allure open ./allure-report",
+    "test":"npm run wdio && npm run report-generate && npm run report-open"
+```
+
+Para executar todos os testes, basta executar a seguinte linha de código:
+
+```
+    npm test
+```
+
+Assim será possível executar os testes, gerar o relatório e abri-lo com apenas um comando.
