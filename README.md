@@ -55,12 +55,24 @@ Este projeto automatiza testes E2E de uma plataforma executada localmente, o **H
 
 **Pré-requisitos**
 - Node.js [versão]
-- Plataforma Hub de Leitura instalada e rodando (branch `hub-leitura`)
-```
+- Plataforma Hub de Leitura (branch `hub-leitura`)
+
+**1. Subir a plataforma**
+
+```bash
 cd hub-de-leitura-integrado
 npm install
 npm start
+```
 
+A plataforma ficará disponível em `[http://localhost:PORTA]`. Mantenha este terminal aberto.
+
+**2. Executar os testes**
+
+Em **outro terminal**, na pasta do projeto de testes:
+
+```bash
+npm test
 ```
 
 **Scripts disponíveis** (definidos no `package.json`)
