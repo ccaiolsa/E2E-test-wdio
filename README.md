@@ -1,48 +1,109 @@
-# Estratégia de Teste
-- Objetivo principal
-Implementação de testes E2E utilizando a ferramenta WebdriverIO em uma plataforma local.
+# 🌐 Testes E2E com WebdriverIO — Hub de Leitura (EBAC)
 
-- Objetivos secundários
-Criação de testes assíncronos
-Conainerizar a plataforma para testá-lo em outros ambientes
-Implementação de ferramentas de geração de relatórios
+![WebdriverIO](https://img.shields.io/badge/WebdriverIO-EA5906?style=for-the-badge&logo=webdriverio&logoColor=white)
+![Allure](https://img.shields.io/badge/Allure_Report-FF6F61?style=for-the-badge&logo=qameta&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 
+> Testes end-to-end (E2E) assíncronos com **WebdriverIO** para a plataforma **Hub de Leitura**, fornecida pela EBAC, com relatórios **Allure** e execução containerizada com **Docker**.
 
-## Funcionalidades testadas
-- Funcionalidade login
-- Funcionalidade checkout
-- Funcoinalidadde busca
+---
 
-## Divisão do projeto
+## 📋 Sobre o projeto
+
+Este projeto automatiza testes E2E de uma plataforma executada localmente, o **Hub de Leitura**, e foi pensado para rodar de forma consistente em diferentes ambientes por meio de containerização.
+
+## 🎯 Estratégia de teste
+
+**Objetivo principal**
+- Implementar testes E2E com WebdriverIO em uma plataforma local
+
+**Objetivos secundários**
+- Criar testes assíncronos
+- Containerizar a plataforma para testá-la em outros ambientes
+- Implementar ferramentas de geração de relatórios
+
+## ✅ Funcionalidades testadas
+
+| Funcionalidade | Descrição |
+|---|---|
+| 🔐 Login | Autenticação de usuário na plataforma |
+| 🛒 Checkout | Fluxo de finalização de compra |
+| 🔎 Busca | Pesquisa de itens na plataforma |
+
+## 🛠️ Ferramentas
+
+| Categoria | Ferramenta |
+|---|---|
+| Framework de testes | WebdriverIO |
+| Relatórios | Allure Report |
+| Containerização | Docker |
+| Runtime | Node.js |
+
+## 🌿 Organização das branches
+
+| Branch | Conteúdo |
+|---|---|
+| `master` | Testes atualizados, com o reporter instalado |
+| `hub-leitura` | Somente a plataforma a ser instalada, sem testes |
+| `docker` | Arquivos Docker, testes e plataforma |
+
+## ▶️ Como executar
+
+### Execução local
+
+**Pré-requisitos**
+- Node.js [versão]
+- Plataforma Hub de Leitura instalada e rodando (branch `hub-leitura`)
 ```
-branch master => branch aonde estão os testes atualizados e com o reporter instalado
-branch hub-leitura => não há testes, mas somente a plataforma a ser instalada
-branch docker => branch onde se localiza os arquivos Docker, teste e plataforma
-
-
-```
-## Comandos Docker
-- build da image: 
-    docker build -t ebac-wdio .
-- execução da imagem e definição do diretório onde os relatórios estarão armazenados:
-    docker run --rm --name ebac-wdio -v "${PWD}/allure-report:/app/allure-report" ebac-wdio
-
-## Executando testes
-
-No package.json estão os seguintes scripts.
+cd hub-de-leitura-integrado
+npm install
+npm start
 
 ```
-    // package.json
-    "wdio": "wdio run ./wdio.conf.js",
-    "report-generate": "allure generate ./allure-results --clean -o ./allure-report",
-    "report-open":"allure open ./allure-report",
-    "test":"npm run wdio && npm run report-generate && npm run report-open"
+
+**Scripts disponíveis** (definidos no `package.json`)
+
+| Script | O que faz |
+|---|---|
+| `npm run wdio` | Executa os testes |
+| `npm run report-generate` | Gera o relatório Allure em `allure-report` |
+| `npm run report-open` | Abre o relatório gerado |
+| `npm test` | Executa tudo em sequência: testes, geração e abertura do relatório |
+
+Para rodar tudo com um único comando:
+
+```bash
+npm test
 ```
 
-Para executar todos os testes, basta executar a seguinte linha de código:
+### Execução com Docker
 
-```
-    npm test
+Na branch `docker`:
+
+**1. Gerar a imagem**
+
+```bash
+docker build -t ebac-wdio .
 ```
 
-Assim será possível executar os testes, gerar o relatório e abri-lo com apenas um comando.
+**2. Executar a imagem** (os relatórios ficam salvos na pasta `allure-report` do seu computador)
+
+```bash
+docker run --rm --name ebac-wdio -v "${PWD}/allure-report:/app/allure-report" ebac-wdio
+```
+
+> 💡 `${PWD}` funciona no Linux, macOS e PowerShell. No CMD do Windows, troque por `%cd%`.
+
+## 📊 Relatórios
+
+Os relatórios são gerados com o **Allure** e ficam na pasta `allure-report`. Para visualizá-los depois de uma execução com Docker:
+
+```bash
+npx allure open ./allure-report
+```
+
+---
+
+<p align="center">Feito por <a href="https://github.com/ccaiolsa">Caio Araújo</a> • <a href="https://www.linkedin.com/in/ccaiolsa-qa">LinkedIn</a></p>
